@@ -25,29 +25,44 @@ func Main(){
 
 func playGame(){
     
-    var chosenLetter: Character = playerGuessInput()
     
-    var avaliableWords = ["Oxygen", "Nitrogen", "Molybdenum", "Hafnium", "Promethium", "Yttrium", "Seaborgium", "Uranium", "Antimony", "Europium"]
+    
+    var avaliableWords = ["oxygen", "nitrogen", "molybdenum", "hafnium", "promethium", "yttrium", "seaborgium", "uranium", "antimony", "europium"]
     
     var avaliableLetters: [Character] = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"]
     
     var visibleLetters = [Character]()
+    var currentWord: String = addWordToWorkingArray(&avaliableWords, &visibleLetters)
     
     while visibleLetters.contains("_") || avaliableLetters.isEmpty == false{
         print("Hello")
         print("")
-     
+        var chosenLetter: Character = playerGuessInput()
+        
         removeLetterFromAvaliableLetterArray(&avaliableLetters, chosenLetter)
+        if currentWord.contains(chosenLetter){
+            let optionalChosenIndex = currentWord.index(of: chosenLetter)
+            if let chosenIndex: Int = optionalChosenIndex{
+                visibleLetters.remove(at: chosenIndex)
+                visibleLetters.insert(chosenLetter, at: chosenIndex)
+            }
+            
+        }
         
         print("")
         
         print("")
-        addWordToWorkingArray(&avaliableWords, &visibleLetters)
+        
         print("")
         print(visibleLetters)
     }
     
+}
+
+func replaceCorrectLetter(_ chosenLetter: inout Character,_ visibleLetterArray: inout Array<Character>){
     
+}
+
 func playerGuessInput() -> Character{
     print("What letter would you like to guess?")
     let optionalLetterInput = readLine()
@@ -74,8 +89,8 @@ func removeLetterFromAvaliableLetterArray(_ avaliableLetterRemove: inout Array<C
     }
 }
 
-}
-func addWordToWorkingArray(_ avaliableWords: inout Array<String>, _ visibleLetter: inout Array<Character>){
+
+func addWordToWorkingArray(_ avaliableWords: inout Array<String>, _ visibleLetter: inout Array<Character>) -> String{
     
     let randWord = Int(arc4random_uniform(10))
     //print(randWord)
@@ -88,6 +103,7 @@ func addWordToWorkingArray(_ avaliableWords: inout Array<String>, _ visibleLette
     for _ in 0..<selectedWordLength{
         visibleLetter.append("-")
     }
+    return selectedWord
 }
 
 
