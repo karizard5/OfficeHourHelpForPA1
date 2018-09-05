@@ -16,30 +16,37 @@
 
 import Foundation
 
+var characterInput: Character = "_"
+var letterIndex: Int = 0
+var letterIndexArray: Int = 6
+
 
 func main(){
     print("Hello")
     print("")
-    playerGuessInput()
     
-    var avaliableWords = initializeWordArray()
+    var chosenLetter: Character = playerGuessInput()
     
-    var avaliableLetters = initializeLetterArray()
+    var avaliableWords = ["Oxygen", "Nitrogen", "Molybdenum", "Hafnium", "Promethium", "Yttrium", "Seaborgium", "Uranium", "Antimony", "Europium"]
     
-    var visibleLetters = initializeVisibleLetterArray()
+    var avaliableLetters: [Character] = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"]
     
-    let chosenLetter: Character = "x"
+    var visibleLetters = [Character]()
+//    var currentWord =
+    
     let newArray = removeLetterFromAvaliableLetterArray(avaliableLetters, chosenLetter)
     print(newArray)
 }
 
-func playerGuessInput(){
+func playerGuessInput() -> Character{
     print("What letter would you like to guess?")
     let optionalLetterInput = readLine()
     if let letterInput = optionalLetterInput{
-        let characterInput: Character = letterInput[letterInput.startIndex]
-        print(characterInput)
+         characterInput = letterInput[letterInput.startIndex]
+        
+        
     }
+    return characterInput
     
         
 
@@ -58,20 +65,37 @@ func removeLetterFromAvaliableLetterArray(_ avaliableLetterRemove: Array<Charact
     
     print("")
     print(pendingRemovalArray)
-    let arraylength: Int = pendingRemovalArray.count
-    
-    for i in 0..<arraylength{
+    //let arraylength: Int = pendingRemovalArray.count
+    if let letterIndex: Int = pendingRemovalArray.index(of: chosenLetter){
+        let letterIndexArray = letterIndex
         if pendingRemovalArray.contains(chosenLetter) {
-            pendingRemovalArray.remove(at: i)
+            pendingRemovalArray.remove(at: letterIndexArray)
+            pendingRemovalArray.insert("_", at: letterIndexArray)
+    }
+    
     }
    
-}
+
      return pendingRemovalArray
 }
-//func addGuessToVisibleLetterArray(_ visibleLetterAdd: Array<Character>) -> Array<Character>{
+//func addWordToWorkingArray(_ avaliableWords: Array<String>){
+//    var randWord = Int(arc4random_uniform(10))
+//    //print(randWord)
+//    let selectedWord: Int = avaliableWords[randWord].count
+//    let currentWord: String = avaliableWords[randWord]
+//    //print(avaliableWords[randWord])
+////
+//    //Adds dashes in unknown word to respresent number of missing letters
+//    for _ in 0..<selectedWord{
+//        visibleLetter.append("-")
+//    }
 //
 //}
-//
+
+//func addGuessToVisibleLetterArray( visibleLetterAdd: Array<Character>, letterChoice: Character) -> Array<Character>{
+    
+//}
+
 func initializeLetterArray() -> Array<Character>{
     let avaliableLetters: [Character] = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"]
     return avaliableLetters
@@ -96,6 +120,7 @@ func initializeVisibleLetterArray() ->Array<Character>{
 
 
 main()
+
 
 
 
