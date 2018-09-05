@@ -1,0 +1,102 @@
+
+
+//  main.swift
+//  Hangman
+//  This program allows the user to play a game of Hangman.
+//  CPSC 315-01, Fall 2018
+//  Programming Assignment #1
+//
+//https://stackoverflow.com/questions/38164543/cannot-subscript-a-value-of-type-string-with-an-index-of-type-uint32
+//https://stackoverflow.com/questions/38386969/swift-3-0-iterate-over-string-index-range
+//
+//
+//  Created by Reid, Jon Carl on 9/3/18.
+//  Copyright © 2018 Reid, Jon Carl. All rights reserved.
+//
+
+import Foundation
+
+
+func main(){
+    print("Hello")
+    print("")
+    playerGuessInput()
+    
+    var avaliableWords = initializeWordArray()
+    
+    var avaliableLetters = initializeLetterArray()
+    
+    var visibleLetters = initializeVisibleLetterArray()
+    
+    let chosenLetter: Character = "x"
+    let newArray = removeLetterFromAvaliableLetterArray(avaliableLetters, chosenLetter)
+    print(newArray)
+}
+
+func playerGuessInput(){
+    print("What letter would you like to guess?")
+    let optionalLetterInput = readLine()
+    if let letterInput = optionalLetterInput{
+        let characterInput: Character = letterInput[letterInput.startIndex]
+        print(characterInput)
+    }
+    
+        
+
+        
+    }
+
+
+//func numGuessLeft() -> Int{
+//    var guessLeft: Int = 7
+//    guessLeft -= var showGuessLeft
+//    return showGuessLeft
+//}
+
+func removeLetterFromAvaliableLetterArray(_ avaliableLetterRemove: Array<Character>, _ chosenLetter: Character) -> Array<Character>{
+    var pendingRemovalArray: [Character] = avaliableLetterRemove
+    
+    print("")
+    print(pendingRemovalArray)
+    let arraylength: Int = pendingRemovalArray.count
+    
+    for i in 0..<arraylength{
+        if pendingRemovalArray.contains(chosenLetter) {
+            pendingRemovalArray.remove(at: i)
+    }
+   
+}
+     return pendingRemovalArray
+}
+//func addGuessToVisibleLetterArray(_ visibleLetterAdd: Array<Character>) -> Array<Character>{
+//
+//}
+//
+func initializeLetterArray() -> Array<Character>{
+    let avaliableLetters: [Character] = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"]
+    return avaliableLetters
+    
+
+}
+
+func initializeWordArray() -> Array<String>{
+    let avaliableWords: [String] = ["Oxygen", "Nitrogen", "Molybdenum", "Hafnium", "Promethium", "Yttrium", "Seaborgium", "Uranium", "Antimony", "Europium"]
+    return avaliableWords
+}
+
+func initializeVisibleLetterArray() ->Array<Character>{
+    let visibleLetter = [Character]()
+    return visibleLetter
+}
+
+//func updatePlayer(_ avaliableLetter: Array<Character>, visibleLetter: Array<Character>){
+//
+//}
+
+
+
+main()
+
+
+
+
