@@ -4,9 +4,9 @@
 //  CPSC 315-01, Fall 2018
 //  Programming Assignment #1
 //
-//https://stackoverflow.com/questions/38164543/cannot-subscript-a-value-of-type-string-with-an-index-of-type-uint32
-//https://stackoverflow.com/questions/38386969/swift-3-0-iterate-over-string-index-range
-//https://stackoverflow.com/questions/24029163/finding-index-of-character-in-swift-string
+// https://stackoverflow.com/questions/38164543/cannot-subscript-a-value-of-type-string-with-an-index-of-type-uint32
+// https://stackoverflow.com/questions/38386969/swift-3-0-iterate-over-string-index-range
+// https://stackoverflow.com/questions/24029163/finding-index-of-character-in-swift-string
 //
 //
 //  Created by Reid, Jon Carl on 9/3/18.
@@ -15,201 +15,213 @@
 
 import Foundation
 
-//Initalized global variables
+//  Initalized global variables
 
 var characterInput: Character = "_"
 var letterIndex: Int = 0
 var letterIndexArray: Int = 6
 
 
-// Main function to execute program
+//  Main function to execute program
 
 func Main(){
     
+    // Initalized arrays for game
     var avaliableWords: [String] = ["oxygen", "carbon", "nobelium", "hafnium", "bromine", "cobalt", "seaborgium", "zinc", "cesium", "argon"]
-    
-    //var avaliableLetters: [Character] = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"]
-    
     var visibleLetters = [Character]()
     
+    // Word to be guess is decided
     var currentWord: String = addWordToWorkingArray(&avaliableWords, &visibleLetters)
+    
+    
+    // Introduction to Player
     print("Hello, welcome to Hangman, Chemistry Edition!")
     print("")
     print("If you need practice remebering the elements, this is the game for you!")
     print("")
-    var guessCounter: Int = 7
-    //print(avaliableWords.count)
-    //playGame(&avaliableWords, &avaliableLetters, &visibleLetters, &currentWord, &guessCounter)
     
+    // Question to player if they would like to participate
     print("Would you like to play? Enter 'y' for yes or 'n' for no")
     print("")
-    let optionalChoice = readLine()
+    let optionalChoice = readLine()                     // Accepts intial yes or no answer
     if let playerChoice = optionalChoice{
-        
-        if playerChoice == "y"{
+        if playerChoice == "y"{                         // If yes, counter and avaliable letters array are initialized
             print("")
-            guessCounter = 7
-            //resetVisibleLetterArray(&visibleLetters, &avaliableWords)
+            var guessCounter = 7
             var avaliableLetters: [Character] = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"]
             
-            print(visibleLetters)
-            print(avaliableWords.count)
-            //currentWord = addWordToWorkingArray(&avaliableWords, &visibleLetters)
+            // This function activates the game.
             playGame(&avaliableWords, &avaliableLetters, &visibleLetters, &currentWord, &guessCounter)
             print("")
             print("")
             print("")
             }
         
-        
+        // If player decides not to play,
+        // we thank them for showing up.
         print("")
         print("Thanks for playing")
         }
     }
     
+// This function contains the loop to run the game.
+// Accepts avaliable word, avaliable letter, and visible letter arrays,
+// as well as the current word and the number of guesses remaining.
 
-//This function resets the visible letter array to a new word after
-//a round has been played
+func playGame(_ avaliableWords: inout Array<String>,_ avaliableLetters: inout Array<Character>,_ visibleLetters: inout Array<Character>,_ currentWord: inout String,_ guessCounter: inout Int ){
+    
+    // Loop continues as lon as player hasn't run out
+    // of guess or has guesses the whole, unknown word
+    while visibleLetters.contains("-") && guessCounter > 0{
+        print("")
+        print(visibleLetters)
+        print("")
+        var chosenLetter: Character = playerGuessInput()        // Assigns the letter given by the player
+                                                                // to be used by other functions.
+        
+        replaceCorrectLetter(&chosenLetter, &avaliableLetters, &currentWord, &visibleLetters, &guessCounter)        // This function checks whether the letter
+                                                                                                                    // is in the unknown word,
+                                                                                                                    // and replaces it if necessesary.
+                                                                                                                    // Otherwise, it tells the player
+                                                                                                                    // to guess again.
+        
+    }
+}
+
+
+// This function resets the visible letter array to a new word after
+// a round has been played, acception the visible letter array, as
+// well as the aviliable list of words.
 
 func resetVisibleLetterArray(_ visibleLetters: inout Array<Character>,_ avaliableWords: inout Array<String>){
-    visibleLetters.removeAll()
+   
+    
+    visibleLetters.removeAll()      // This removes the correctly guessed letters
+                                    // from the previous round.
     print(visibleLetters)
     
-    let wordListSize: UInt32 = 10
-    let randWord = Int(arc4random_uniform(wordListSize))
+    let wordListSize: UInt32 = 10                               // This initializes the word list size
+    let randWord = Int(arc4random_uniform(wordListSize))        // to the original size. Allows for word
+                                                                // list size to be decremented.
     
-    
-    let selectedWord: String = avaliableWords[randWord]
-    let selectedWordLength: Int = selectedWord.count
+    let selectedWord: String = avaliableWords[randWord]         // Picks the random word from the avaliable words
+    let selectedWordLength: Int = selectedWord.count            // list and finds its length, to build the visible
+                                                                // letter array.
     
     print(selectedWord)
     
-    //Adds dashes in unknown word to respresent number of missing letters
-    for _ in 0..<selectedWordLength{
+    
+    for _ in 0..<selectedWordLength{                            // Adds dashes in unknown word to respresent number of missing letters.
         visibleLetters.append("-")
     }
     
 }
 
-//This function contains the loop to run the game.
 
-func playGame(_ avaliableWords: inout Array<String>,_ avaliableLetters: inout Array<Character>,_ visibleLetters: inout Array<Character>,_ currentWord: inout String,_ guessCounter: inout Int ){
-    
-    while visibleLetters.contains("-") && guessCounter > 0{
-        print("")
-        print(visibleLetters)
-        print(avaliableWords)
-        print("")
-        var chosenLetter: Character = playerGuessInput()
-        
-        replaceCorrectLetter(&chosenLetter, &avaliableLetters, &currentWord, &visibleLetters, &guessCounter)
-        
-        
-    }
-}
-
-//This function replaces the letter, if it is found to be in the selected word,
-//in the approiate spot in the visible letter array.
+// This function replaces the letter, if it is found to be in the selected word,
+// in the approiate spot in the visible letter array, accepting the chosen letter
+// avaliable letter list, current word, visible letter array, as well as the
+// number of guesses.
 
 func replaceCorrectLetter(_ chosenLetter: inout Character,_ avaliableLetters: inout Array<Character>,_ currentWord: inout String, _ visibleLetters: inout Array<Character>, _ guessCounter: inout Int){
-    if avaliableLetters.contains(chosenLetter) == true{
-        removeLetterFromAvaliableLetterArray(&avaliableLetters, chosenLetter)
-        if currentWord.contains(chosenLetter){
-            let optionalStringIndex = currentWord.index(of: chosenLetter)
+    
+    if avaliableLetters.contains(chosenLetter) == true{                                                         // Finds if chosen letter has been guessed.
+        removeLetterFromAvaliableLetterArray(&avaliableLetters, chosenLetter)                                   // Removes letter from avaliable letters.
+        if currentWord.contains(chosenLetter){                                                                  // Checks if letter is in selected word.
+            let optionalStringIndex = currentWord.index(of: chosenLetter)                                       // Creates index of where letter is in word.
             if let stringIndex = optionalStringIndex{
-                let optionalChosenIndex = currentWord.distance(from: currentWord.startIndex, to: stringIndex)
+                let optionalChosenIndex = currentWord.distance(from: currentWord.startIndex, to: stringIndex)   // Finds the index of the letter as an integer.
                 print("")
-                visibleLetters.remove(at: optionalChosenIndex)
-                visibleLetters.insert(chosenLetter, at: optionalChosenIndex)}
-                print("Congrats! That was correct")
+                visibleLetters.remove(at: optionalChosenIndex)                                                  // If letter is correct, remove placeholder in
+                visibleLetters.insert(chosenLetter, at: optionalChosenIndex)}                                   // visible letter array, and replace it with
+                print("Congrats! That was correct")                                                             // correct letter.
             if visibleLetters.contains("-") == false{
-                print("")
-                print("You have won! You should ditch Comp Sci and become a Chemist!")
+                print("")                                                                                       // Handles if user has fully guessed the word
+                print("You have won! You should ditch Comp Sci and become a Chemist!")                          // and won the round.
                 print("")
             }
         }
         else{
-            print("")
-            print("I'm sorry. That letter is not in the word. Try again")
+            print("")                                                                                           // If letter guess is not in the selected
+            print("I'm sorry. That letter is not in the word. Try again")                                       // word, informs user that guess is wrong.
             if guessCounter > 0{
-                guessCounter -= 1
+                guessCounter -= 1                                                                               // Incorrect guess amount is decreased.
                 print("")
                 print("You have \(guessCounter) incorrect guesses left.")
-                if guessCounter == 0{
-                    print("")
-                    print("Sorry, you have lost")
+                if guessCounter == 0{                                                                           // If user has ran out of incorrect guesses,
+                    print("")                                                                                   // informs user that they have lost.
+                    print("Sorry, you have lost")                                                               // While loop shuts down game if guess = 0.
                     print("")
                 }
             }
         }
     }
     else{
-        print("This letter has already been used. Please try again.")
-        print(visibleLetters)
+        print("This letter has already been used. Please try again.")                                           // Informs user that letter has already been
+        print(visibleLetters)                                                                                   // guessed. No guess penalty.
     }
 
 
 }
 
-//This function accepts player letter entry and changes the entry
-//to a character type for use in the functions
+// This function accepts player letter entry and changes the entry
+// to a character type for use in the functions. Returns the character
+// that has been guessed for variable assignment in other functions.
 
 func playerGuessInput() -> Character{
-    print("What letter would you like to guess?")
+    
+    print("What letter would you like to guess?")                                                               // Prompts user to guess a letter
     print("")
-    let optionalLetterInput = readLine()
+    let optionalLetterInput = readLine()                                                                        // Accepts user input as optional
     print("")
     print("Let's see how you did...")
     print("")
-    if let letterInput = optionalLetterInput{
-        characterInput = letterInput[letterInput.startIndex]
-    }
+    if let letterInput = optionalLetterInput{                                                                   // Unwraps input using optional binding.
+        characterInput = letterInput[letterInput.startIndex]                                                    // Assigns letter input as a character
+    }                                                                                                           // for later use.
     return characterInput
 }
 
-//This function removes letters from the overall avaliable letter list
-//The player cannot use them again to guess
+// This function removes letters from the overall avaliable letter list.
+// The player cannot use them again to guess again. This function
+// accepts the avaliable letters list and the chosen letter.
 
 func removeLetterFromAvaliableLetterArray(_ avaliableLetterRemove: inout Array<Character>, _ chosenLetter: Character){
+    
     print("")
-    if let letterIndex: Int = avaliableLetterRemove.index(of: chosenLetter){
-        if avaliableLetterRemove.contains(chosenLetter) {
-            avaliableLetterRemove.remove(at: letterIndex)
+    if let letterIndex: Int = avaliableLetterRemove.index(of: chosenLetter){                            // Finds the index of the chosen letter
+        if avaliableLetterRemove.contains(chosenLetter) {                                               // in the avaliable letter array.
+            avaliableLetterRemove.remove(at: letterIndex)                                               // Removes the chosen letter from the array.
         }
-        print("Avaliable Letters:")
+        print("Avaliable Letters:")                                                                     // Displays updated avaliable letters.
         print(avaliableLetterRemove)
     }
 }
 
-//This function adds the necessary number of spaces to the array that holds the correct
-//letters for the chosen word
+// This function adds the necessary number of spaces to the array that holds the correct
+// letters for the chosen word.
 
 func addWordToWorkingArray(_ avaliableWords: inout Array<String>, _ visibleLetter: inout Array<Character>) -> String{
     
-    var wordListSize: UInt32 = 10
-    var randWord = Int(arc4random_uniform(wordListSize))
-    //print(randWord)
-    let selectedWord: String = avaliableWords[randWord]
-    let selectedWordLength: Int = selectedWord.count
+    var wordListSize: UInt32 = 10                                                                       // Initalizes word list size to 10 words.
+    let randWord = Int(arc4random_uniform(wordListSize))                                                // Finds random index to select word.
     
-   // print(selectedWord)
+    let selectedWord: String = avaliableWords[randWord]                                                 // Assigns the selected word to a variable for
+    let selectedWordLength: Int = selectedWord.count                                                    // later use, and finds the length of the word.
     
-    avaliableWords.remove(at: randWord)
-    wordListSize -= 1
-    //print(wordListSize)
+    avaliableWords.remove(at: randWord)                                                                 // After word has been selected, removes move
+    wordListSize -= 1                                                                                   // from list and decreases list size, so if player
+                                                                                                        // wants to replay, they will not see same word.
     
-    
-    
-    //Adds dashes in unknown word to respresent number of missing letters
-    for _ in 0..<selectedWordLength{
-        visibleLetter.append("-")
-    }
+    for _ in 0..<selectedWordLength{                                                                    // Adds dashes in unknown word to represent number of
+        visibleLetter.append("-")                                                                       // missing letters, utilizing the length of the
+    }                                                                                                   // selected word.
     return selectedWord
-}
+}                                                                                                       // Returns the selected word for use in the main
+                                                                                                        // function.
 
 
-
-Main()
+Main()                                                                                                  //Initialization of main function
 
 
 
