@@ -27,7 +27,7 @@ func playGame(){
     
     
     
-    var avaliableWords = ["oxygen", "nitrogen", "molybdenum", "hafnium", "promethium", "yttrium", "seaborgium", "uranium", "antimony", "europium"]
+    var avaliableWords: [String] = ["oxygen", "nitrogen", "nobelium", "hafnium", "promethium", "cobalt", "seaborgium", "zinc", "antimony", "argon"]
     
     var avaliableLetters: [Character] = ["a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z"]
     
@@ -37,16 +37,11 @@ func playGame(){
     while visibleLetters.contains("_") || avaliableLetters.isEmpty == false{
         print("Hello")
         print("")
-        var chosenLetter: Character = playerGuessInput()
         
-        removeLetterFromAvaliableLetterArray(&avaliableLetters, chosenLetter)
-        if currentWord.contains(chosenLetter){
-            let optionalChosenIndex = currentWord.index(of: chosenLetter)
-            if let chosenIndex: Int = optionalChosenIndex{
-                visibleLetters.remove(at: chosenIndex)
-                visibleLetters.insert(chosenLetter, at: chosenIndex)
-            }
-            
+        var chosenLetter: Character = playerGuessInput()
+        replaceCorrectLetter(&chosenLetter, &avaliableLetters, &currentWord, &visibleLetters)
+       
+        
         }
         
         print("")
@@ -54,13 +49,37 @@ func playGame(){
         print("")
         
         print("")
-        print(visibleLetters)
-    }
+    
+    
     
 }
 
-func replaceCorrectLetter(_ chosenLetter: inout Character,_ visibleLetterArray: inout Array<Character>){
-    
+func replaceCorrectLetter(_ chosenLetter: inout Character,_ avaliableLetters: inout Array<Character>,_ currentWord: inout String, _ visibleLetters: inout Array<Character>){
+    if avaliableLetters.contains(chosenLetter) == true{
+        removeLetterFromAvaliableLetterArray(&avaliableLetters, chosenLetter)
+        if currentWord.contains(chosenLetter){
+            
+            let optionalStringIndex = currentWord.index(of: chosenLetter)
+            if let stringIndex = optionalStringIndex{
+                let optionalChosenIndex = currentWord.distance(from: currentWord.startIndex, to: stringIndex)
+                print("")
+                visibleLetters.remove(at: optionalChosenIndex)
+                visibleLetters.insert(chosenLetter, at: optionalChosenIndex)}
+            print(visibleLetters)
+        }
+        
+    }
+    else{
+        print("This letter has already been used. Please use another letter.")
+        print(visibleLetters)
+        printAvaliableLetterArray(visibleLetters)
+    }
+}
+
+func printAvaliableLetterArray(_ visibleLetter: Array<Character>){
+    for letter in visibleLetter{
+        print(letter)
+    }
 }
 
 func playerGuessInput() -> Character{
@@ -98,7 +117,7 @@ func addWordToWorkingArray(_ avaliableWords: inout Array<String>, _ visibleLette
     let selectedWordLength: Int = selectedWord.count
     
     print(selectedWord)
-
+    
     //Adds dashes in unknown word to respresent number of missing letters
     for _ in 0..<selectedWordLength{
         visibleLetter.append("-")
@@ -142,7 +161,5 @@ func addWordToWorkingArray(_ avaliableWords: inout Array<String>, _ visibleLette
 
 
 Main()
-
-
 
 
