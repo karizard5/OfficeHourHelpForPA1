@@ -129,9 +129,11 @@ func replaceCorrectLetter(_ chosenLetter: inout Character,_ avaliableLetters: in
         removeLetterFromAvaliableLetterArray(&avaliableLetters, chosenLetter)                                   // Removes letter from avaliable letters.
         if currentWord.contains(chosenLetter){                                                                  // Checks if letter is in selected word.
             let optionalStringIndex = currentWord.index(of: chosenLetter)                                       // Creates index of where letter is in word.
+                                                                                                                // See second reference.
             if let stringIndex = optionalStringIndex{
-                let optionalChosenIndex = currentWord.distance(from: currentWord.startIndex, to: stringIndex)   // Finds the index of the letter as an integer.
-                print("")
+                let optionalChosenIndex = currentWord.distance(from: currentWord.startIndex, to: stringIndex)   // Finds the index of the letter as an
+                print("")                                                                                       // integer. See third reference.
+                
                 visibleLetters.remove(at: optionalChosenIndex)                                                  // If letter is correct, remove placeholder in
                 visibleLetters.insert(chosenLetter, at: optionalChosenIndex)}                                   // visible letter array, and replace it with
                 print("Congrats! That was correct")                                                             // correct letter.
@@ -204,7 +206,7 @@ func removeLetterFromAvaliableLetterArray(_ avaliableLetterRemove: inout Array<C
 func addWordToWorkingArray(_ avaliableWords: inout Array<String>, _ visibleLetter: inout Array<Character>) -> String{
     
     var wordListSize: UInt32 = 10                                                                       // Initalizes word list size to 10 words.
-    let randWord = Int(arc4random_uniform(wordListSize))                                                // Finds random index to select word.
+    let randWord = Int(arc4random_uniform(wordListSize))                                                // Finds random index to select word. See first ref.
     
     let selectedWord: String = avaliableWords[randWord]                                                 // Assigns the selected word to a variable for
     let selectedWordLength: Int = selectedWord.count                                                    // later use, and finds the length of the word.
@@ -222,6 +224,5 @@ func addWordToWorkingArray(_ avaliableWords: inout Array<String>, _ visibleLette
 
 
 Main()                                                                                                  //Initialization of main function
-
 
 
